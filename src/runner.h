@@ -6,6 +6,7 @@
 #define AUTOSCRIPT_RUNNER_H
 
 #include "operation.h"
+#include <stdio.h>
 
 
 int call_value(Operation* op, Operation* prev);
@@ -15,13 +16,18 @@ int call_operator(Operations* ops, int result, char* op);
 
 int call_ops(Operations* ops) {
     int result = 0;
-    if(ops_has(ops) && ops_current(ops)->type == OPERATOR_NUMBER) {
+    if(ops_has(ops) && (ops_current(ops)->type == OPERATOR_NUMBER || ops_current(ops)->type == OPERATOR_SUB)) {
         result = call(ops_current(ops));
         ops_next(ops);
     }
+//    if(ops_has(ops) && ops_current(ops)->type == OPERATOR_SUB) {
+//        printf("\n\nCOUNT SUB OPS: %d!\n", ops_current(ops)->operations->length);
+//        result = call_ops(ops_current(ops)->operations);
+//    }
     while (ops_has(ops) && ops_current(ops) ->type == OPERATOR_OP) {
         result = call_operator(ops, result, ops_current(ops)->c_value);
     }
+
     return result;
 }
 
@@ -31,14 +37,14 @@ int call_operator(Operations* ops, int current, char* op) {
     ops_next(ops);
     int value = call(ops_current(ops));
     ops_next(ops);
-    printf("OPERATOR: %s, VALUE=%d, More=%d\n", op, value, ops_has(ops));
+    //printf("OPERATOR: %s, VALUE=%d, More=%d\n", op, value, ops_has(ops));
 
     Operation* current_op = ops_current(ops);
     while(ops_has(ops) && current_op -> type == OPERATOR_OP && (op_order(current_op->c_value) > op_order(op))) {
-        printf("VALUE 0: %d, %s\n", value, current_op->c_value);
+        //printf("VALUE 0: %d, %s\n", value, current_op->c_value);
         value = call_operator(ops, value, current_op->c_value);
         current_op = ops_current(ops);
-        printf("VALUE 1: %d\n", value);
+        //printf("VALUE 1: %d\n", value);
     }
 
 
@@ -62,8 +68,13 @@ int call_value(Operation* op, Operation* prev) {
 }
 
 int call(Operation* op) {
-    int value = toInt(op->c_value);
-    return value;
+    if(op -> type == OPERATOR_NUMBER) {
+        return toInt(op->c_value);
+    }
+    else if(op -> type == OPERATOR_SUB){
+        return call_ops(op->operations);
+    }
+    return 0;
 }
 
 int op_order(char* op) {
@@ -72,7 +83,6 @@ int op_order(char* op) {
     }
 
     if(strcmp("/", op) == 0 || strcmp("*", op) == 0) {
-        printf("Is mul\n");
         return 1;
     }
     return 2;

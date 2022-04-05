@@ -8,11 +8,19 @@
 #include <string.h>
 #include "index.h"
 
-typedef enum TokenType { WORD,
-                         TOKEN_NUMBER, TOKEN_MATH_OPERATOR, TOKEN_PARENTHESIS, OR_NULL, OR} TokenType;
+typedef enum TokenType {
+    TOKEN_WORD,
+    TOKEN_NUMBER,
+    TOKEN_MATH_OPERATOR,
+    TOKEN_PARENTHESIS_OPEN,
+    TOKEN_PARENTHESIS_CLOSE,
+
+    OR_NULL,
+    TOKEN_OR,
+} TokenType;
 
 typedef struct Token {
-    char* text;
+    char *text;
     Index index;
     TokenType type;
 } Token;

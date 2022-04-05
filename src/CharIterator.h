@@ -9,7 +9,6 @@
 #include <string.h>
 #include <malloc.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include "index.h"
 
 typedef struct CharIterator {

@@ -12,7 +12,6 @@
 
 #include <string.h>
 #include <malloc.h>
-#include <stdio.h>
 
 
 typedef struct Tokenizer {
@@ -82,7 +81,7 @@ Token *tk_takeParenthesis(Tokenizer *tokenizer) {
     if (it_isIn(it, "()")) {
         Token *plus = tl_createToken();
         plus->text = toString(it_current(it));
-        plus->type = TOKEN_PARENTHESIS;
+        plus->type = it_is(it, '(') ? TOKEN_PARENTHESIS_OPEN : TOKEN_PARENTHESIS_CLOSE;
         plus->index = it_getIndex(it);
         tl_addToken(tokenizer->tokenList, plus);
         it_next(it);

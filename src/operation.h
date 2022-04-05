@@ -16,7 +16,8 @@ typedef enum OperatorType { OPERATOR_ADD,
                             OPERATOR_DIV,
                             OPERATOR_MODULO,
                             OPERATOR_NUMBER,
-                            OPERATOR_OP
+                            OPERATOR_OP,
+                            OPERATOR_SUB
 } OperatorType;
 typedef struct Operations Operations ;
 
